@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#1c87d9" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <title>QR Frame Color</title>
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=20260325b" />
+    <link rel="icon" type="image/png" href="app-icon.png?v=20260325b" />
+    <style>
+      * { box-sizing: border-box; }
+      html, body { height: 100%; margin: 0; }
+      body {
+        background: #f0f0f0;
+        font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+        -webkit-font-smoothing: antialiased;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        max-width: 430px;
+        margin: 0 auto;
+      }
+      .header {
+        width: 100%;
+        background: #1c87d9;
+        padding: max(54px, calc(env(safe-area-inset-top) + 10px)) 16px 20px;
+        display: grid;
+        grid-template-columns: 30px 1fr 30px;
+        align-items: center;
+        border-bottom-left-radius: 12px;
+        border-bottom-right-radius: 12px;
+      }
+      .header a {
+        color: #d6e6ff;
+        font-size: 30px;
+        text-decoration: none;
+        line-height: 1;
+      }
+      .header h1 {
+        margin: 0;
+        color: #f1f7ff;
+        text-align: center;
+        font-size: 20px;
+        font-weight: 620;
+      }
+      .content {
+        padding: 32px 24px;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 24px;
+      }
+      .preview-frame {
+        width: 120px;
+        height: 120px;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+        transition: background-color 0.2s;
+      }
+      .preview-inner {
+        width: 100%;
+        height: 100%;
+        background: #fff;
+        border-radius: 2px;
+      }
+      label {
+        font-size: 16px;
+        font-weight: 600;
+        color: #12171d;
+      }
+      .color-input-row {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .preset-wrap {
+        width: 100%;
+        max-width: 320px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .preset-label {
+        font-size: 14px;
+        font-weight: 600;
+        color: #3b4047;
+        text-align: center;
+      }
+      .preset-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+      .preset-btn {
+        appearance: none;
+        border: 1px solid #d5d9de;
+        background: #fff;
+        border-radius: 10px;
+        padding: 8px 10px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #1c232b;
+        cursor: pointer;
+      }
+      .preset-btn:active {
+        opacity: 0.85;
+      }
+      .preset-swatch {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        border: 1px solid rgba(0, 0, 0, 0.12);
+        flex: 0 0 16px;
+      }
+      input[type="color"] {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 60px;
+        height: 44px;
+        border: 2px solid #d0d3d8;
+        border-radius: 10px;
+        padding: 3px;
+        cursor: pointer;
+        background: #fff;
+      }
+      input[type="color"]::-webkit-color-swatch-wrapper {
+        padding: 0;
+      }
+      input[type="color"]::-webkit-color-swatch {
+        border: none;
+        border-radius: 6px;
+      }
+      .hex-input {
+        font-size: 18px;
+        font-weight: 500;
+        padding: 10px 14px;
+        border: 2px solid #d0d3d8;
+        border-radius: 10px;
+        width: 130px;
+        text-align: center;
+        font-family: monospace;
+      }
+      .zones-wrap {
+        width: 100%;
+        max-width: 280px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .zones-label {
+        font-size: 16px;
+        font-weight: 600;
+        color: #12171d;
+        text-align: center;
+      }
+      .zone-input {
+        font-size: 20px;
+        font-weight: 600;
+        padding: 10px 14px;
+        border: 2px solid #d0d3d8;
+        border-radius: 10px;
+        width: 100%;
+        text-align: center;
+        font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+      }
+      .save-btn {
+        width: 100%;
+        max-width: 280px;
+        padding: 14px;
+        background: #1c87d9;
+        color: #fff;
+        border: none;
+        border-radius: 12px;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        margin-top: 8px;
+      }
+      .save-btn:active {
+        opacity: 0.85;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <a href="index.html" aria-label="Back">‹</a>
+      <h1>QR Frame Color</h1>
+      <span></span>
+    </div>
+    <div class="content">
+      <div class="preview-frame" id="preview">
+        <div class="preview-inner"></div>
+      </div>
+      <label>Choose a color</label>
+      <div class="color-input-row">
+        <input type="color" id="colorPicker" value="#0066ff" />
+        <input type="text" class="hex-input" id="hexInput" value="#0066ff" maxlength="7" />
+      </div>
+      <div class="preset-wrap">
+        <div class="preset-label">Preset colors</div>
+        <div class="preset-grid">
+          <button class="preset-btn" type="button" data-preset-color="#0066ff">
+            <span class="preset-swatch" style="background:#0066ff;"></span>
+            Bright Blue
+          </button>
+          <button class="preset-btn" type="button" data-preset-color="#005CAC">
+            <span class="preset-swatch" style="background:#005CAC;"></span>
+            Dark Blue
+          </button>
+          <button class="preset-btn" type="button" data-preset-color="#0FAE4B">
+            <span class="preset-swatch" style="background:#0FAE4B;"></span>
+            Green
+          </button>
+          <button class="preset-btn" type="button" data-preset-color="#9CD9B0">
+            <span class="preset-swatch" style="background:#9CD9B0;"></span>
+            Light Green
+          </button>
+          <button class="preset-btn" type="button" data-preset-color="#FDA53E">
+            <span class="preset-swatch" style="background:#FDA53E;"></span>
+            Orange
+          </button>
+          <button class="preset-btn" type="button" data-preset-color="#FDCA33">
+            <span class="preset-swatch" style="background:#FDCA33;"></span>
+            Yellow
+          </button>
+          <button class="preset-btn" type="button" data-preset-color="#FF5C5C">
+            <span class="preset-swatch" style="background:#FF5C5C;"></span>
+            Red
+          </button>
+          <button class="preset-btn" type="button" data-preset-color="#992991">
+            <span class="preset-swatch" style="background:#992991;"></span>
+            Purple
+          </button>
+          <button class="preset-btn" type="button" data-preset-color="#BAD2E5">
+            <span class="preset-swatch" style="background:#BAD2E5;"></span>
+            Light Blue
+          </button>
+          <button class="preset-btn" type="button" data-preset-color="#939597">
+            <span class="preset-swatch" style="background:#939597;"></span>
+            Gray
+          </button>
+        </div>
+      </div>
+      <div class="zones-wrap">
+        <label class="zones-label" for="zoneInput">Zones</label>
+        <input
+          type="text"
+          id="zoneInput"
+          class="zone-input"
+          inputmode="numeric"
+          pattern="[0-9]*"
+          value="4"
+        />
+      </div>
+      <button class="save-btn" id="saveBtn">Save</button>
+    </div>
+    <script>
+      const DEFAULT_COLOR = "#0066ff";
+      const DEFAULT_ZONE = "4";
+      const preview = document.getElementById("preview");
+      const colorPicker = document.getElementById("colorPicker");
+      const hexInput = document.getElementById("hexInput");
+      const zoneInput = document.getElementById("zoneInput");
+      const saveBtn = document.getElementById("saveBtn");
+      const presetButtons = document.querySelectorAll("[data-preset-color]");
+
+      function normalizeHex(color) {
+        if (!color) return null;
+        const trimmed = color.trim();
+        const withHash = trimmed.startsWith("#") ? trimmed : `#${trimmed}`;
+        if (!/^#[0-9a-fA-F]{6}$/.test(withHash)) {
+          return null;
+        }
+        return withHash.toLowerCase();
+      }
+
+      function normalizeZone(value) {
+        if (value === null || value === undefined) return null;
+        const trimmed = String(value).trim();
+        if (!/^\d+$/.test(trimmed)) {
+          return null;
+        }
+        return String(parseInt(trimmed, 10));
+      }
+
+      const savedRaw = localStorage.getItem("qrFrameColor");
+      const legacyDefaultColors = new Set(["#ff5c5c", "#ff0000", "#3385fe"]);
+      const saved = savedRaw && !legacyDefaultColors.has(savedRaw.trim().toLowerCase()) ? savedRaw : DEFAULT_COLOR;
+      const savedZone = normalizeZone(localStorage.getItem("zoneNumber")) || DEFAULT_ZONE;
+      setColor(saved);
+      zoneInput.value = savedZone;
+
+      function setColor(color) {
+        const normalized = normalizeHex(color) || DEFAULT_COLOR;
+        preview.style.backgroundColor = normalized;
+        colorPicker.value = normalized;
+        hexInput.value = normalized;
+      }
+
+      colorPicker.addEventListener("input", () => {
+        setColor(colorPicker.value);
+      });
+
+      zoneInput.addEventListener("input", () => {
+        zoneInput.value = zoneInput.value.replace(/[^\d]/g, "");
+      });
+
+      hexInput.addEventListener("input", () => {
+        const normalized = normalizeHex(hexInput.value);
+        if (normalized) {
+          preview.style.backgroundColor = normalized;
+          colorPicker.value = normalized;
+        }
+      });
+
+      presetButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          setColor(button.dataset.presetColor);
+        });
+      });
+
+      saveBtn.addEventListener("click", () => {
+        const normalizedColor = normalizeHex(colorPicker.value) || DEFAULT_COLOR;
+        const normalizedZone = normalizeZone(zoneInput.value) || DEFAULT_ZONE;
+        localStorage.setItem("qrFrameColor", normalizedColor);
+        localStorage.setItem("zoneNumber", normalizedZone);
+        window.location.href = "index.html";
+      });
+    </script>
+  </body>
+</html>

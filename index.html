@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#1c87d9" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <title>One Way Ticket</title>
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=20260325b" />
+    <link rel="icon" type="image/png" href="app-icon.png?v=20260325b" />
+    <link rel="stylesheet" href="styles.css?v=20260518b" />
+  </head>
+  <body>
+    <div class="phone-shell">
+      <header class="top-hero">
+        <div class="nav-row">
+          <button class="back-btn" type="button" aria-label="Back">‹</button>
+          <h1>One Way Ticket</h1>
+          <span class="nav-spacer" aria-hidden="true"></span>
+        </div>
+      </header>
+
+      <main class="ticket-wrap">
+        <section class="ticket-card" aria-label="Ticket Card">
+          <div class="qr-frame">
+            <img
+              src="qr-code.jpg?v=20260325a"
+              alt="Ticket QR code"
+              onerror="if (!this.dataset.fallback) { this.dataset.fallback = '1'; this.src = 'assets/qr-code.jpg?v=20260325a'; }"
+            />
+          </div>
+
+          <div class="tap-row">
+            <span class="divider" aria-hidden="true"></span>
+            <span class="tap-text">Tap to enlarge</span>
+            <span class="divider" aria-hidden="true"></span>
+          </div>
+
+          <h2>INTERSTATE</h2>
+          <p class="zone-number" id="zoneNumber">4</p>
+          <p class="zone-label">ZONE RIDE</p>
+          <p class="adult-count">1 Adult</p>
+
+          <div class="ticket-footer">
+            <div class="pulse-bar" id="pulseBar" aria-hidden="true">
+              <img
+                src="flashing-bar-cropped.png?v=20260518a"
+                alt=""
+                onerror="if (!this.dataset.fallback) { this.dataset.fallback = '1'; this.src = 'assets/flashing-bar-cropped.png?v=20260518a'; }"
+              />
+            </div>
+
+            <div class="progress-track" aria-hidden="true">
+              <div class="progress-fill" id="progressFill"></div>
+            </div>
+
+            <p class="expires">
+              Expires in <span id="countdown">60:00</span>
+            </p>
+
+            <a class="validator-link" href="settings.html">
+              View Onboard Validator Instructions
+            </a>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="app.js?v=20260518b"></script>
+  </body>
+</html>
